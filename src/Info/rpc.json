@@ -1,0 +1,10 @@
+{
+    "mainnet": {
+        "chainId": 1,
+        "rpc": "https://mainnet.infura.io/v3/626322aac146432eb4c973491743d238"
+    },
+    "testnet": {
+        "chainId": 4,
+        "rpc": "https://rinkeby.infura.io/v3/7e0814b69dcb4c5fb34c2669f3f984fa"
+    }
+}
