@@ -29,9 +29,9 @@ function App() {
         <Provider store={store} >
             <ThemeProvider theme={getThemeType()}>
                 <UseWalletProvider
-                    chainId={rpcInfo.testnet.chainId}
+                    chainId={rpcInfo.mainnet.chainId}
                     connectors={{
-                      walletconnect: { rpcUrl: rpcInfo.testnet.rpc },
+                      walletconnect: { rpcUrl: rpcInfo.mainnet.rpc },
                     }}
                 >
                     <CssBaseline/>

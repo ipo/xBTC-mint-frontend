@@ -20,7 +20,7 @@ import Stats from "../Statistics/Stats";
 import tokens from "../Info/token.json"
 import Geyser, {getTotalStats} from '../geyser';
 
-const tokenInfo = tokens.testnet;
+const tokenInfo = tokens.mainnet;
 
 const useStyles = makeStyles((theme) => ({
     box: {

@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import axios from 'axios';
 import { ethers } from 'ethers'
 
-const tokenInfo = tokens.testnet;
+const tokenInfo = tokens.mainnet;
 
 class Geyser {
     web3 = null;
