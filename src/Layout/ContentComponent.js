@@ -531,7 +531,7 @@ function ContentComponent() {
             });
         } else {
             if (geyser) {
-                geyser.removeEventListenr("TokensClaimed");
+                geyser.removeEventListener("TokensClaimed");
             }
             setGeyser(null);
             setPending(false);
@@ -600,7 +600,7 @@ function ContentComponent() {
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
                                     <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
-                                                    value={withdraw ? withdraw.toString() : null}
+                                                    value={withdraw ? withdraw.toString() : ""}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
                                         variant={"contained"}
@@ -648,8 +648,8 @@ function ContentComponent() {
                                     <ListItemText primary={"Amount"} classes={{primary: classes.listHead}}/>
                                 </ListItemSecondaryAction>
                             </ListItem>
-                            {items.map((value) => {
-                                return (<React.Fragment>
+                            {items.map((value, index) => {
+                                return (<React.Fragment key={index}>
                                         <Divider classes={{root: classes.divider}}/>
                                         <ListItem key={value} classes={{root: classes.listItemRoot}}>
                                             <ListItemText primary={value.name}

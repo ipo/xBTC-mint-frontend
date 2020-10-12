@@ -13,6 +13,7 @@ class Geyser {
     geyserContract = null;
     lpContract = null;
     account = "";
+    eventsSubscription = null;
 
     constructor(_account, _provider) {
         const provider = _provider;
@@ -114,7 +115,7 @@ class Geyser {
     }
 
     addEventListener(event, handler) {
-        this.geyserContract.events[event]({filter: {user: this.account}}, (error, result) => {
+        this.eventsSubscription = this.geyserContract.events[event]({filter: {user: this.account}}, (error, result) => {
             if (result) {
                 const amount = result.returnValues.amount;
                 handler(error, this.toHuman(amount, tokenInfo.reward.decimals));
@@ -122,8 +123,8 @@ class Geyser {
         });
     }
 
-    removeEventListenr(event) {
-        this.geyserContract.removeEventListenr(event);
+    removeEventListener(event) {
+        this.eventsSubscription.unsubscribe();
     }
 
     get lpDecimals() {
