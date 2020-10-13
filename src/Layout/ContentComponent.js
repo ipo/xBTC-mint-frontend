@@ -168,7 +168,6 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto'
     },
 
-
     gearbox: {
         fontFamily: 'IBM Plex Sans',
         fontStyle: 'normal',
@@ -178,7 +177,6 @@ const useStyles = makeStyles((theme) => ({
         color: '#FFFFFF',
         lineHeight: '130px'
     },
-
 
     withdrawButton: {
         background: '#3bc0f3',
@@ -200,7 +198,7 @@ const useStyles = makeStyles((theme) => ({
         }
 
     },
-    depositButtonMax: {
+    withdrawButtonMax: {
         background: '#3bc0f3',
         mixBlendMode: 'normal',
         borderRadius: '4px',
@@ -213,7 +211,6 @@ const useStyles = makeStyles((theme) => ({
             background: '#3bc0f3',
             color: '#FFFFFF',
         }
-
     },
     depositButton: {
         background: '#3240a2',
@@ -231,9 +228,8 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             width: "100%"
         },
-
     },
-    approveButton: {
+    depositButtonMax: {
         background: '#3240a2',
         mixBlendMode: 'normal',
         borderRadius: '4px',
@@ -243,13 +239,9 @@ const useStyles = makeStyles((theme) => ({
         height: '40px',
         marginTop: '-5px',
         "&:hover": {
-            background: '#3240a2',
+            background: '#3bc0f3',
             color: '#FFFFFF',
-        },
-        [theme.breakpoints.down('md')]: {
-            width: "100%"
-        },
-        marginBottom: '10px'
+        }
     },
     listItemRoot: {
         paddingTop: "16px",
@@ -305,23 +297,23 @@ const BootstrapInput = withStyles((theme) => ({
 }))(InputBase);
 
 const statsLabels = [{
-    id: "all_time_total_rewards",
+    id: "all_time_total_rewards_token",
     name: "Total Rewards",
     unit: "xBTC"
 }, {
-    id: "current_locked_rewards",
+    id: "current_locked_rewards_token",
     name: "Locked Rewards",
     unit: "xBTC"
 }, {
     id: "program_duration_days",
-    name: "Program duration",
-    unit: "days left"
+    name: "Maximum bonuse at",
+    unit: "days"
 }, {
     id: "current_total_staked",
     name: "Total Deposits",
     unit: "USD"
 }, {
-    id: "current_unlocked_rewards",
+    id: "current_unlocked_rewards_token",
     name: "Unlocked Rewards",
     unit: "xBTC"
 }, {
@@ -339,7 +331,7 @@ const TxType = {
 
 function ContentComponent() {
     const classes = useStyles();
-    const { account, ethereum } = useWallet()
+    const { account, ethereum, connect } = useWallet()
 
     const [availableBalance, setAvailableBalance] = useState(0);
     const [allowance, setAllownace] = useState(0);
@@ -360,10 +352,20 @@ function ContentComponent() {
     const [withdraw, setWithdraw] = useState(null)
 
     const handleChangeDepositAmount = (event) => {
-        setDeposit(Number(event.target.value))
+        const num = Number(event.target.value);
+        if (num >= 0) {
+            setDeposit(num);
+        } else {
+            setDeposit(-num);
+        }
     }
     const handleChangeWithdrawAmount = (event) => {
-        setWithdraw(event.target.value);
+        const num = Number(event.target.value);
+        if (num >= 0) {
+            setWithdraw(num);
+        } else {
+            setWithdraw(-num);
+        }
     }
 
     const depositPercent = () => {
@@ -377,7 +379,7 @@ function ContentComponent() {
     }
 
     const estimateMonthlyReward = () => {
-        if (deposit === null) {
+        if (deposit === null || deposit <= 0) {
             return 0;
         }
         return deposit * estimateRewardRate;
@@ -438,7 +440,7 @@ function ContentComponent() {
     }
 
     const setMaxDeposit = () => {
-
+        setDeposit(availableBalance);
     }
 
     const checkTxStatus = async () => {
@@ -560,8 +562,15 @@ function ContentComponent() {
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{availableBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
                                     <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
+                                                    value={deposit ? deposit.toString() : null}
                                                     onChange={handleChangeDepositAmount}/>
-
+                                    <Button
+                                        variant={"contained"}
+                                        className={classes.depositButtonMax}
+                                        onClick={() => setMaxDeposit()}
+                                    >
+                                        Max
+                                    </Button>
                                     <Typography variant={"h5"} className={classes.walletHeader}>Your Estimated
                                         Rewards:</Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{estimateMonthlyReward().toFixed(2)} {tokenInfo.reward.name} /
@@ -575,18 +584,28 @@ function ContentComponent() {
 
                                 </Grid>
                                 <Grid item md={2} sm={12} xs={12}>
-                                    {
-                                        requireApprove() && <Button
-                                            variant={"contained"}
-                                            className={classes.approveButton}
-                                            onClick={() => approveToken()}
-                                        >Approve</Button>
-                                    }
+                                {
+                                    !account && <Button
+                                        variant={"contained"}
+                                        className={classes.depositButton}
+                                        onClick={() => connect('injected')}
+                                    >Connect</Button>
+                                }
+                                {
+                                    account && requireApprove() && <Button
+                                        variant={"contained"}
+                                        className={classes.depositButton}
+                                        onClick={() => approveToken()}
+                                    >Approve</Button>
+                                }
+                                {
+                                    account && !requireApprove() && 
                                     <Button
                                         variant={"contained"} 
                                         className={classes.depositButton}
                                         onClick={() => stake()}
                                     >Deposit</Button>
+                                }
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -604,7 +623,7 @@ function ContentComponent() {
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
                                         variant={"contained"}
-                                        className={classes.depositButtonMax}
+                                        className={classes.withdrawButtonMax}
                                         onClick={() => setMaxWithdraw()}
                                     >
                                         Max
@@ -616,13 +635,22 @@ function ContentComponent() {
                                         month</Typography> */}
                                 </Grid>
                                 <Grid container item md={4} sm={12} xs={12} justify="flex-end">
-                                    <Button
-                                        variant={"contained"}
-                                        className={classes.withdrawButton}
-                                        onClick={() => unstake()}
-                                    >Withdraw</Button>
                                     {
-                                        claimedReward !== null && <>
+                                        account && <Button
+                                            variant={"contained"}
+                                            className={classes.withdrawButton}
+                                            onClick={() => unstake()}
+                                        >Withdraw</Button>
+                                    }
+                                    {
+                                        !account && <Button
+                                            variant={"contained"}
+                                            className={classes.withdrawButton}
+                                            onClick={() => connect('injected')}
+                                        >Connect</Button>
+                                    }
+                                    {
+                                        account && claimedReward !== null && <>
                                         <br/>
                                             <Typography variant={"h5"} className={classes.walletHeader}>Rewards
                                                 Claimed</Typography>
