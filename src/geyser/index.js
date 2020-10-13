@@ -26,7 +26,6 @@ class Geyser {
 
     async availableBalance() {
         const balance = await this.lpContract.methods.balanceOf(this.account).call();
-        console.log(balance);
         return balance;
     }
 
@@ -47,7 +46,6 @@ class Geyser {
 
     async allowance() {
         const allowance = await this.lpContract.methods.allowance(this.account, tokenInfo.geyser).call();
-        console.log(allowance.toString(0));
         return this.toHuman(allowance, this.lpDecimals);
     }
 
