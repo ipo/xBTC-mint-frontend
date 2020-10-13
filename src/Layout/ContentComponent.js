@@ -535,12 +535,6 @@ function ContentComponent() {
 
         updateTotalStats();
     }
-
-    useEffect(() => {
-      if (!account) {
-        connect();
-      }
-    }, [account])
     
     useEffect(() => {
         if (pendingTx !== null) {
