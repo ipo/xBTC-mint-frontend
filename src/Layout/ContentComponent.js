@@ -346,7 +346,7 @@ function ContentComponent() {
     const { account, ethereum, connect } = useWallet()
 
     const [availableBalance, setAvailableBalance] = useState(0);
-    const [allowance, setAllownace] = useState(0);
+    const [allowance, setAllowance] = useState(0);
     const [pending, setPending] = useState(false);
     const [pendingTxType, setPendingTxType] = useState(TxType.None);
     const [checkTxTimer, setCheckTxTimer] = useState(null);
@@ -526,8 +526,8 @@ function ContentComponent() {
         _geyser.availableHumanBalance().then(_balance => {
             setAvailableBalance(_balance);
         });
-        _geyser.allownace().then(_allowance => {
-            setAllownace(_allowance);
+        _geyser.allowance().then(_allowance => {
+            setAllowance(_allowance);
         });
         _geyser.depositedAmount().then(_depositedAmount => {
             setDepositedBalance(_depositedAmount);
@@ -567,7 +567,7 @@ function ContentComponent() {
             }
             setGeyser(null);
             setPending(false);
-            setAllownace(0);
+            setAllowance(0);
             setAvailableBalance(0);
             setDepositedBalance(0);
         }

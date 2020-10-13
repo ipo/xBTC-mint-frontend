@@ -45,7 +45,7 @@ class Geyser {
         return new BigNumber(num).times(new BigNumber(10).pow(new BigNumber(decimals)));
     }
 
-    async allownace() {
+    async allowance() {
         const allowance = await this.lpContract.methods.allowance(this.account, tokenInfo.geyser).call();
         console.log(allowance.toString(0));
         return this.toHuman(allowance, this.lpDecimals);
