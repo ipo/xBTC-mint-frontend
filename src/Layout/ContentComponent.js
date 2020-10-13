@@ -578,7 +578,7 @@ function ContentComponent() {
                                         balance:</Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"} min="0"
                                     value={deposit ? deposit.toString() : ""}
                                                     onChange={handleChangeDepositAmount}/>
                                     <Button
@@ -636,7 +636,7 @@ function ContentComponent() {
                                         balance:</Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"} min="0"
                                                     value={withdraw ? withdraw.toString() : ""}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
