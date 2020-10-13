@@ -3,7 +3,6 @@
   "header.title": "The MINT",
   "header.connect": "Conectar",
   "header.disconnect": "Desconectar",
-  "header.title": "The MINT",
 
   "content.enterAmount": "Introduce un monto",
   "content.max": "Máximo",
@@ -12,7 +11,7 @@
   "content.deposit": "Depositar",
   "content.withdraw": "Retirar",
   "content.estimated_rewards": "Recompensa estimada:",
-  "content.wallet_balance": "Balance de tu billetera",
+  "content.wallet_balance": "Balance de tu billetera:",
   "content.deposited_balance": "Balance depositado:",
 
   "content.type": "Métrica",
