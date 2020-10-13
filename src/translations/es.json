@@ -19,6 +19,7 @@
   "content.amount": "Valor",
   "content.apy": "TRA",
   "content.stats": "Estadísticas",
+  "content.approve": "Autorizar",
 
   "stats.total_rewards": "Recompensas totales",
   "stats.locked_rewards": "Recompensas no entregadas",

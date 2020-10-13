@@ -363,21 +363,28 @@ function ContentComponent() {
     const [deposit, setDeposit] = useState(0)
     const [withdraw, setWithdraw] = useState(0)
 
-    const handleChangeDepositAmount = (event) => {
-        const num = Number(event.target.value);
-        if (num >= 0) {
-            setDeposit(num);
-        } else {
-            setDeposit(-num);
+    const [depositString, setDepositString] = useState("")
+    const [withdrawString, setWithdrawString] = useState("")
+
+    const handleChangeDepositAmount = (event) => {  
+        let stringValue = event.target.value;
+        let numberValue = Number(event.target.value);
+        if (numberValue < 0) {
+            stringValue = "0";
+            numberValue = 0;
         }
+        setDepositString(stringValue);
+        setDeposit(numberValue);
     }
     const handleChangeWithdrawAmount = (event) => {
-        const num = Number(event.target.value);
-        if (num >= 0) {
-            setWithdraw(num);
-        } else {
-            setWithdraw(-num);
+        let stringValue = event.target.value;
+        let numberValue = Number(event.target.value);
+        if (numberValue < 0) {
+            stringValue = "0";
+            numberValue = 0;
         }
+        setWithdrawString(stringValue);
+        setWithdraw(numberValue);
     }
 
     const depositPercent = () => {
@@ -449,10 +456,12 @@ function ContentComponent() {
     
     const setMaxWithdraw = () => {
         setWithdraw(depositedBalance);
+        setWithdrawString(depositedBalance.toString());
     }
 
     const setMaxDeposit = () => {
         setDeposit(availableBalance);
+        setDepositString(availableBalance.toString());
     }
 
     const checkTxStatus = async () => {
@@ -598,8 +607,8 @@ function ContentComponent() {
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
                                     <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
-                                    value={deposit ? deposit.toString() : ""}
-                                                    onChange={handleChangeDepositAmount}/>
+                                    value={depositString}
+                                      onChange={handleChangeDepositAmount}/>
                                     <Button
                                         variant={"contained"}
                                         className={classes.depositButtonMax}
@@ -676,7 +685,7 @@ function ContentComponent() {
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
                                     <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
-                                                    value={withdraw ? withdraw.toString() : ""}
+                                                    value={withdrawString}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
                                         variant={"contained"}
