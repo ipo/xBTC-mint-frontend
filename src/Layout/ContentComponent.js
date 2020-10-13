@@ -16,7 +16,6 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import {fade, InputBase} from "@material-ui/core";
 import { useWallet } from 'use-wallet'
-import Stats from "../Statistics/Stats";
 import tokens from "../Info/token.json"
 import Geyser, {getTotalStats} from '../geyser';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -337,7 +336,7 @@ function ContentComponent() {
         name: intl.formatMessage({id: 'stats.unlocked_rewards', defaultMessage: "Unlocked Rewards"}),
         unit: "xBTC"
     }, {
-        id: "current_reward_rate_30d_usd",
+        id: "current_reward_rate_30d_token",
         name: intl.formatMessage({id: 'stats.reward_unlock_rate', defaultMessage: "Reward unlock rate"}),
         unit: `xBTC / ${intl.formatMessage({id: 'stats.month', defaultMessage: "month"})}`
     },
@@ -362,8 +361,8 @@ function ContentComponent() {
     const [depositedBalance, setDepositedBalance] = useState(0);
     const [geyser, setGeyser] = useState(null);
 
-    const [apy, setAPY] = useState(0);
-    const [estimateRewardRate, setEstimateRewardRate] = useState(0);
+    const [totalStaked, setTotalStaked] = useState(0);
+    const [rewardRate30, setRewardRate30] = useState(0);
 
     const [deposit, setDeposit] = useState(0)
     const [withdraw, setWithdraw] = useState(0)
@@ -406,12 +405,12 @@ function ContentComponent() {
         if (deposit === null || deposit <= 0) {
             return 0;
         }
-        return deposit * estimateRewardRate;
+        return deposit * rewardRate30 / (totalStaked + deposit);
     }
 
     const requireApprove = () => {
         if (account) {
-            return deposit > allowance || allowance == 0;
+            return deposit > allowance || allowance === 0;
         }
         return false;
     }
@@ -519,9 +518,10 @@ function ContentComponent() {
                 value: `${valueString} ${statsLabel.unit}`
             }
         });
-        setEstimateRewardRate(stats.current_reward_rate_daily * 30 / stats.all_time_total_rewards);
+        setTotalStaked(stats.current_total_staked_token);
+        setRewardRate30(stats.current_reward_rate_30d_token);
+
         setItems(newItems);
-        setAPY(stats.apy_estimate);
     }
 
     const updateInfo = (_geyser) => {
