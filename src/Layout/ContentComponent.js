@@ -19,6 +19,7 @@ import { useWallet } from 'use-wallet'
 import Stats from "../Statistics/Stats";
 import tokens from "../Info/token.json"
 import Geyser, {getTotalStats} from '../geyser';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const tokenInfo = tokens.mainnet;
 
@@ -168,7 +169,6 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto'
     },
 
-
     gearbox: {
         fontFamily: 'IBM Plex Sans',
         fontStyle: 'normal',
@@ -178,7 +178,6 @@ const useStyles = makeStyles((theme) => ({
         color: '#FFFFFF',
         lineHeight: '130px'
     },
-
 
     withdrawButton: {
         background: '#3bc0f3',
@@ -200,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
         }
 
     },
-    depositButtonMax: {
+    withdrawButtonMax: {
         background: '#3bc0f3',
         mixBlendMode: 'normal',
         borderRadius: '4px',
@@ -212,8 +211,11 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             background: '#3bc0f3',
             color: '#FFFFFF',
+        },
+        "&:disabled": {
+            background: '#3bc0f3',
+            color: '#7F7F7F',
         }
-
     },
     depositButton: {
         background: '#3240a2',
@@ -231,9 +233,8 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             width: "100%"
         },
-
     },
-    approveButton: {
+    depositButtonMax: {
         background: '#3240a2',
         mixBlendMode: 'normal',
         borderRadius: '4px',
@@ -243,13 +244,13 @@ const useStyles = makeStyles((theme) => ({
         height: '40px',
         marginTop: '-5px',
         "&:hover": {
-            background: '#3240a2',
+            background: '#3bc0f3',
             color: '#FFFFFF',
         },
-        [theme.breakpoints.down('md')]: {
-            width: "100%"
-        },
-        marginBottom: '10px'
+        "&:disabled": {
+          background: '#3240a2',
+          color: '#7F7F7F',
+        }
     },
     listItemRoot: {
         paddingTop: "16px",
@@ -304,32 +305,6 @@ const BootstrapInput = withStyles((theme) => ({
     },
 }))(InputBase);
 
-const statsLabels = [{
-    id: "all_time_total_rewards",
-    name: "Total Rewards",
-    unit: "xBTC"
-}, {
-    id: "current_locked_rewards",
-    name: "Locked Rewards",
-    unit: "xBTC"
-}, {
-    id: "program_duration_days",
-    name: "Program duration",
-    unit: "days left"
-}, {
-    id: "current_total_staked",
-    name: "Total Deposits",
-    unit: "USD"
-}, {
-    id: "current_unlocked_rewards",
-    name: "Unlocked Rewards",
-    unit: "xBTC"
-}, {
-    id: "current_reward_rate_daily",
-    name: "Reward unlock rate",
-    unit: "xBTC / month"
-}];
-
 const TxType = {
     None: 0,
     Approve: 1, 
@@ -338,8 +313,37 @@ const TxType = {
 }
 
 function ContentComponent() {
+
+    const intl = useIntl();
+
+    const statsLabels = [{
+        id: "all_time_total_rewards_token",
+        name: intl.formatMessage({id: 'stats.total_rewards', defaultMessage: "Total Rewards"}),
+        unit: "xBTC"
+    }, {
+        id: "current_locked_rewards_token",
+        name: intl.formatMessage({id: 'stats.locked_rewards', defaultMessage: "Locked Rewards"}),
+        unit: "xBTC"
+    }, {
+        id: "program_duration_days",
+        name: intl.formatMessage({id: 'stats.maximum_bonus', defaultMessage: "Maximum bonus at"}),
+        unit: intl.formatMessage({id: 'stats.days', defaultMessage: "days"})
+    }, {
+        id: "current_total_staked",
+        name: intl.formatMessage({id: 'stats.total_deposits', defaultMessage: "Total Deposits"}),
+        unit: "USD"
+    }, {
+        id: "current_unlocked_rewards_token",
+        name: intl.formatMessage({id: 'stats.unlocked_rewards', defaultMessage: "Unlocked Rewards"}),
+        unit: "xBTC"
+    }, {
+        id: "current_reward_rate_daily",
+        name: intl.formatMessage({id: 'stats.reward_unlock_rate', defaultMessage: "Reward unlock rate"}),
+        unit: `xBTC / ${intl.formatMessage({id: 'stats.month', defaultMessage: "month"})}`
+    }];
+
     const classes = useStyles();
-    const { account, ethereum } = useWallet()
+    const { account, ethereum, connect } = useWallet()
 
     const [availableBalance, setAvailableBalance] = useState(0);
     const [allowance, setAllownace] = useState(0);
@@ -356,14 +360,24 @@ function ContentComponent() {
     const [apy, setAPY] = useState(0);
     const [estimateRewardRate, setEstimateRewardRate] = useState(0);
 
-    const [deposit, setDeposit] = useState(null)
-    const [withdraw, setWithdraw] = useState(null)
+    const [deposit, setDeposit] = useState(0)
+    const [withdraw, setWithdraw] = useState(0)
 
     const handleChangeDepositAmount = (event) => {
-        setDeposit(Number(event.target.value))
+        const num = Number(event.target.value);
+        if (num >= 0) {
+            setDeposit(num);
+        } else {
+            setDeposit(-num);
+        }
     }
     const handleChangeWithdrawAmount = (event) => {
-        setWithdraw(event.target.value);
+        const num = Number(event.target.value);
+        if (num >= 0) {
+            setWithdraw(num);
+        } else {
+            setWithdraw(-num);
+        }
     }
 
     const depositPercent = () => {
@@ -377,7 +391,7 @@ function ContentComponent() {
     }
 
     const estimateMonthlyReward = () => {
-        if (deposit === null) {
+        if (deposit === null || deposit <= 0) {
             return 0;
         }
         return deposit * estimateRewardRate;
@@ -438,7 +452,7 @@ function ContentComponent() {
     }
 
     const setMaxDeposit = () => {
-
+        setDeposit(availableBalance);
     }
 
     const checkTxStatus = async () => {
@@ -477,12 +491,21 @@ function ContentComponent() {
         }
     ]);
 
+    const formatNumber = (number, decimalPlaces) => {
+      const locale = window.navigator.userLanguage || window.navigator.language;
+      return number.toLocaleString(locale, {
+        minimumFractionDigits: decimalPlaces,
+        maximumFractionDigits: decimalPlaces
+      });
+    }
+
     const updateTotalStats = async () => {
         const stats = await getTotalStats();
         const newItems = statsLabels.map(statsLabel => {
+            const valueString = formatNumber(stats[statsLabel.id], 2);
             return {
                 name: statsLabel.name,
-                value: stats[statsLabel.id].toFixed(2) + " " + statsLabel.unit
+                value: `${valueString} ${statsLabel.unit}`
             }
         });
         setEstimateRewardRate(stats.current_reward_rate_daily * 30 / stats.all_time_total_rewards);
@@ -531,7 +554,7 @@ function ContentComponent() {
             });
         } else {
             if (geyser) {
-                geyser.removeEventListenr("TokensClaimed");
+                geyser.removeEventListener("TokensClaimed");
             }
             setGeyser(null);
             setPending(false);
@@ -545,6 +568,11 @@ function ContentComponent() {
         updateTotalStats();
     }, [])
 
+    
+    const enterAmountPlaceholder = intl.formatMessage({id: 'content.enterAmount', defaultMessage: "Enter Amount"});
+    const typeString = intl.formatMessage({id: 'content.type', defaultMessage: "Type"});
+    const amountString = intl.formatMessage({id: 'content.amount', defaultMessage: "Amount"});
+
     return (
         <Container maxWidth="lg" component="main">
             {pending && <CircularProgress className={classes.loading}/>}
@@ -555,38 +583,76 @@ function ContentComponent() {
                         <CardContent>
                             <Grid container spacing={2} alignItems="center" justify={"center"}>
                                 <Grid item md={6} sm={12} xs={12}>
-                                    <Typography variant={"h5"} className={classes.walletHeader}>Wallet
-                                        balance:</Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{availableBalance}&nbsp;
+                                    <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.wallet_balance"
+                                          defaultMessage="Wallet balance:"
+                                          description="wallet balance label"/>
+                                    </Typography>
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
+                                    value={deposit ? deposit.toString() : ""}
                                                     onChange={handleChangeDepositAmount}/>
-
-                                    <Typography variant={"h5"} className={classes.walletHeader}>Your Estimated
-                                        Rewards:</Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{estimateMonthlyReward().toFixed(2)} {tokenInfo.reward.name} /
+                                    <Button
+                                        variant={"contained"}
+                                        className={classes.depositButtonMax}
+                                        onClick={() => setMaxDeposit()}
+                                        disabled={!account}
+                                    >
+                                    <FormattedMessage id="content.max"
+                                        defaultMessage="Max"
+                                        description="max button"/>
+                                    </Button>
+                                    <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.estimated_rewards"
+                                            defaultMessage="Your Estimated Rewards:"
+                                            description="estimated rewards label"/>
+                                    </Typography>
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(estimateMonthlyReward(), 2)} {tokenInfo.reward.name} /
                                         month</Typography>
                                 </Grid>
 
                                 <Grid item md={4} sm={12} xs={12}>
                                     <div className={classes.depositAmount}>
-                                        <Typography variant={"h4"} className={classes.gearbox}>{depositPercent().toFixed(2)} %</Typography>
+                                        <Typography variant={"h4"} className={classes.gearbox}>{formatNumber(depositPercent(), 2)} %</Typography>
                                     </div>
 
                                 </Grid>
                                 <Grid item md={2} sm={12} xs={12}>
-                                    {
-                                        requireApprove() && <Button
-                                            variant={"contained"}
-                                            className={classes.approveButton}
-                                            onClick={() => approveToken()}
-                                        >Approve</Button>
-                                    }
+                                {
+                                    !account && <Button
+                                        variant={"contained"}
+                                        className={classes.depositButton}
+                                        onClick={() => connect('injected')}
+                                    >
+                                        <FormattedMessage id="content.connect"
+                                            defaultMessage="Connect"
+                                            description="connect button"/>
+                                    </Button>
+                                }
+                                {
+                                    account && requireApprove() && <Button
+                                        variant={"contained"}
+                                        className={classes.depositButton}
+                                        onClick={() => approveToken()}
+                                    >
+                                    <FormattedMessage id="content.approve"
+                                        defaultMessage="Approve"
+                                        description="approve button"/>
+                                    </Button>
+                                }
+                                {
+                                    account && !requireApprove() && 
                                     <Button
                                         variant={"contained"} 
                                         className={classes.depositButton}
                                         onClick={() => stake()}
-                                    >Deposit</Button>
+                                    >
+                                    <FormattedMessage id="content.deposit"
+                                        defaultMessage="Deposit"
+                                        description="deposit button"/>
+                                    </Button>
+                                }
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -595,19 +661,25 @@ function ContentComponent() {
                         <CardContent>
                             <Grid container spacing={2} alignItems="center" justify={"center"}>
                                 <Grid item md={8} sm={12} xs={12}>
-                                    <Typography variant={"h5"} className={classes.walletHeader}>Deposited
-                                        balance:</Typography>
+                                    <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.deposited_balance"
+                                          defaultMessage="Deposited balance:"
+                                          description="deposited balance label"/>
+                                    </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
-                                                    value={withdraw ? withdraw.toString() : null}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
+                                                    value={withdraw ? withdraw.toString() : ""}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
                                         variant={"contained"}
-                                        className={classes.depositButtonMax}
+                                        className={classes.withdrawButtonMax}
+                                        disabled={!account}
                                         onClick={() => setMaxWithdraw()}
                                     >
-                                        Max
+                                    <FormattedMessage id="content.max"
+                                        defaultMessage="Max"
+                                        description="max button"/>
                                     </Button>
 
                                     {/* <Typography variant={"h5"} className={classes.walletHeader}>Amount to
@@ -616,17 +688,30 @@ function ContentComponent() {
                                         month</Typography> */}
                                 </Grid>
                                 <Grid container item md={4} sm={12} xs={12} justify="flex-end">
-                                    <Button
-                                        variant={"contained"}
-                                        className={classes.withdrawButton}
-                                        onClick={() => unstake()}
-                                    >Withdraw</Button>
                                     {
-                                        claimedReward !== null && <>
+                                        account && <Button
+                                            variant={"contained"}
+                                            className={classes.withdrawButton}
+                                            onClick={() => unstake()}
+                                        >Withdraw</Button>
+                                    }
+                                    {
+                                        !account && <Button
+                                            variant={"contained"}
+                                            className={classes.withdrawButton}
+                                            onClick={() => connect('injected')}
+                                        >
+                                            <FormattedMessage id="content.connect"
+                                                defaultMessage="Connect"
+                                                description="connect button"/>
+                                        </Button>
+                                    }
+                                    {
+                                        account && claimedReward !== null && <>
                                         <br/>
                                             <Typography variant={"h5"} className={classes.walletHeader}>Rewards
                                                 Claimed</Typography>
-                                            <Typography variant={"h6"} className={classes.walletHeaderThin}>{claimedReward.toFixed(2)}&nbsp;
+                                            <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(claimedReward, 2)}&nbsp;
                                             {tokenInfo.reward.name}</Typography>
                                         </>
                                     }
@@ -643,13 +728,13 @@ function ContentComponent() {
                         <Divider classes={{root: classes.divider}}/>
                         <List className={classes.listItems}>
                             <ListItem classes={{root: classes.listItemRoot}}>
-                                <ListItemText primary={"Type"} classes={{primary: classes.listHead}}/>
+                                <ListItemText primary={typeString} classes={{primary: classes.listHead}}/>
                                 <ListItemSecondaryAction>
-                                    <ListItemText primary={"Amount"} classes={{primary: classes.listHead}}/>
+                                    <ListItemText primary={amountString} classes={{primary: classes.listHead}}/>
                                 </ListItemSecondaryAction>
                             </ListItem>
-                            {items.map((value) => {
-                                return (<React.Fragment>
+                            {items.map((value, index) => {
+                                return (<React.Fragment key={index}>
                                         <Divider classes={{root: classes.divider}}/>
                                         <ListItem key={value} classes={{root: classes.listItemRoot}}>
                                             <ListItemText primary={value.name}
@@ -666,7 +751,7 @@ function ContentComponent() {
                     </Card>
                 </Grid>
                 <Grid item md={12}>
-                    <Stats apy={apy.toFixed()}/>
+                    <Stats apy={formatNumber(apy)}/>
                 </Grid>
             </Grid>
             }

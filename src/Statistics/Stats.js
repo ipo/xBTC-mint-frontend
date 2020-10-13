@@ -7,6 +7,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Divider from "@material-ui/core/Divider";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     statisticsCard: {
@@ -45,11 +46,12 @@ const useStyles = makeStyles((theme) => ({
     },
     depositAmount: {
         backgroundColor: "#00AEEF",
-        height: '130px',
-        width: '130px',
+        height: '200px',
+        width: '200px',
         borderRadius: '100%',
         textAlign: "center",
-        margin: 'auto'
+        margin: 'auto',
+        position: 'relative'
     },
     gearbox: {
         fontFamily: 'IBM Plex Sans',
@@ -58,7 +60,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '23px',
         textAlign: 'center',
         color: '#FFFFFF',
-        lineHeight: '130px'
+        top: '50%',
+        position: 'relative',
+        transform: 'translate(-0%,-50%)'
     },
     lowerInfo: {
         display: "flex",
@@ -131,12 +135,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Stats({apy}) {
     const classes = useStyles();
+    const intl = useIntl();
+    const apyString = intl.formatMessage({id: 'content.apy', defaultMessage: "APY"});
+
     return (
 
         <Grid container spacing={5} direction={"row"} justify={"center"}>
             <Grid item md={4} sm={12} xs={12}>
                 <Card className={classes.statisticsCard}>
-                    <CardHeader title={"Apy"}
+                    <CardHeader title={apyString}
                                 classes={{root: classes.cardHeaderRoot, title: classes.header}}>
                     </CardHeader>
                     <Divider classes={{root: classes.divider}}/>
