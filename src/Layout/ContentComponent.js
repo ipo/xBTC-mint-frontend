@@ -348,8 +348,8 @@ function ContentComponent() {
     const [apy, setAPY] = useState(0);
     const [estimateRewardRate, setEstimateRewardRate] = useState(0);
 
-    const [deposit, setDeposit] = useState(null)
-    const [withdraw, setWithdraw] = useState(null)
+    const [deposit, setDeposit] = useState(0)
+    const [withdraw, setWithdraw] = useState(0)
 
     const handleChangeDepositAmount = (event) => {
         const num = Number(event.target.value);
@@ -479,12 +479,21 @@ function ContentComponent() {
         }
     ]);
 
+    const formatNumber = (number, decimalPlaces) => {
+      const locale = window.navigator.userLanguage || window.navigator.language;
+      return number.toLocaleString(locale, {
+        minimumFractionDigits: decimalPlaces,
+        maximumFractionDigits: decimalPlaces
+      });
+    }
+
     const updateTotalStats = async () => {
         const stats = await getTotalStats();
         const newItems = statsLabels.map(statsLabel => {
+            const valueString = formatNumber(stats[statsLabel.id], 2);
             return {
                 name: statsLabel.name,
-                value: stats[statsLabel.id].toFixed(2) + " " + statsLabel.unit
+                value: `${valueString} ${statsLabel.unit}`
             }
         });
         setEstimateRewardRate(stats.current_reward_rate_daily * 30 / stats.all_time_total_rewards);
@@ -559,10 +568,10 @@ function ContentComponent() {
                                 <Grid item md={6} sm={12} xs={12}>
                                     <Typography variant={"h5"} className={classes.walletHeader}>Wallet
                                         balance:</Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{availableBalance}&nbsp;
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
                                     <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
-                                                    value={deposit ? deposit.toString() : null}
+                                    value={deposit}
                                                     onChange={handleChangeDepositAmount}/>
                                     <Button
                                         variant={"contained"}
@@ -573,13 +582,13 @@ function ContentComponent() {
                                     </Button>
                                     <Typography variant={"h5"} className={classes.walletHeader}>Your Estimated
                                         Rewards:</Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{estimateMonthlyReward().toFixed(2)} {tokenInfo.reward.name} /
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(estimateMonthlyReward(), 2)} {tokenInfo.reward.name} /
                                         month</Typography>
                                 </Grid>
 
                                 <Grid item md={4} sm={12} xs={12}>
                                     <div className={classes.depositAmount}>
-                                        <Typography variant={"h4"} className={classes.gearbox}>{depositPercent().toFixed(2)} %</Typography>
+                                        <Typography variant={"h4"} className={classes.gearbox}>{formatNumber(depositPercent(), 2)} %</Typography>
                                     </div>
 
                                 </Grid>
@@ -654,7 +663,7 @@ function ContentComponent() {
                                         <br/>
                                             <Typography variant={"h5"} className={classes.walletHeader}>Rewards
                                                 Claimed</Typography>
-                                            <Typography variant={"h6"} className={classes.walletHeaderThin}>{claimedReward.toFixed(2)}&nbsp;
+                                            <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(claimedReward, 2)}&nbsp;
                                             {tokenInfo.reward.name}</Typography>
                                         </>
                                     }
@@ -694,7 +703,7 @@ function ContentComponent() {
                     </Card>
                 </Grid>
                 <Grid item md={12}>
-                    <Stats apy={apy.toFixed()}/>
+                    <Stats apy={formatNumber(apy)}/>
                 </Grid>
             </Grid>
             }
