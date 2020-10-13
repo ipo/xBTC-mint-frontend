@@ -9,6 +9,8 @@
   "content.max": "Máximo",
   "content.connect": "Conectar",
   "content.disconnect": "Desconectar",
+  "content.deposit": "Depositar",
+  "content.withdraw": "Retirar",
   "content.estimated_rewards": "Recompensa estimada:",
   "content.wallet_balance": "Balance de tu billetera",
   "content.deposited_balance": "Balance depositado:",

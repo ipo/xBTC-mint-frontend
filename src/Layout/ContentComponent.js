@@ -693,7 +693,11 @@ function ContentComponent() {
                                             variant={"contained"}
                                             className={classes.withdrawButton}
                                             onClick={() => unstake()}
-                                        >Withdraw</Button>
+                                        >
+                                        <FormattedMessage id="content.withdraw"
+                                            defaultMessage="Withdraw"
+                                            description="withdraw button"/>
+                                        </Button>
                                     }
                                     {
                                         !account && <Button
