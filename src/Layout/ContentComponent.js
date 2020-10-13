@@ -210,6 +210,10 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             background: '#3bc0f3',
             color: '#FFFFFF',
+        },
+        "&:disabled": {
+            background: '#3bc0f3',
+            color: '#7F7F7F',
         }
     },
     depositButton: {
@@ -241,6 +245,10 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             background: '#3bc0f3',
             color: '#FFFFFF',
+        },
+        "&:disabled": {
+          background: '#3240a2',
+          color: '#7F7F7F',
         }
     },
     listItemRoot: {
@@ -571,12 +579,13 @@ function ContentComponent() {
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
                                     <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"}
-                                    value={deposit}
+                                    value={deposit ? deposit.toString() : ""}
                                                     onChange={handleChangeDepositAmount}/>
                                     <Button
                                         variant={"contained"}
                                         className={classes.depositButtonMax}
                                         onClick={() => setMaxDeposit()}
+                                        disabled={!account}
                                     >
                                         Max
                                     </Button>
@@ -633,6 +642,7 @@ function ContentComponent() {
                                     <Button
                                         variant={"contained"}
                                         className={classes.withdrawButtonMax}
+                                        disabled={!account}
                                         onClick={() => setMaxWithdraw()}
                                     >
                                         Max
