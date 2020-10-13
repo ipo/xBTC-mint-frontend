@@ -356,7 +356,7 @@ function ContentComponent() {
     const [checkTxTimer, setCheckTxTimer] = useState(null);
     const [pendingTx, setPendingTx] = useState(null);
 
-    const [claimedReward, setClaimedReward] = useState(null);
+    const [rewardsToBeClaimed, setRewardsToBeClaimed] = useState(null);
 
     const [depositedBalance, setDepositedBalance] = useState(0);
     const [geyser, setGeyser] = useState(null);
@@ -380,7 +380,7 @@ function ContentComponent() {
         setDepositString(stringValue);
         setDeposit(numberValue);
     }
-    const handleChangeWithdrawAmount = (event) => {
+    const handleChangeWithdrawAmount = async (event) => {
         let stringValue = event.target.value;
         let numberValue = Number(event.target.value);
         if (numberValue < 0) {
@@ -389,6 +389,7 @@ function ContentComponent() {
         }
         setWithdrawString(stringValue);
         setWithdraw(numberValue);
+        setRewardsToBeClaimed(await geyser.rewardsToBeClaimed(numberValue));
     }
 
     const depositPercent = () => {
@@ -455,9 +456,10 @@ function ContentComponent() {
         }
     }
     
-    const setMaxWithdraw = () => {
+    const setMaxWithdraw = async () => {
         setWithdraw(depositedBalance);
         setWithdrawString(depositedBalance.toString());
+        setRewardsToBeClaimed(await geyser.rewardsToBeClaimed(depositedBalance));
     }
 
     const setMaxDeposit = () => {
@@ -551,22 +553,9 @@ function ContentComponent() {
         if (account) {
             const geyser = new Geyser(account, ethereum);
             setGeyser(geyser);
-            
             updateInfo(geyser);
 
-            geyser.addEventListener("TokensClaimed", (error, result) => {
-                if (error) {
-                    return;
-                }
-                console.log("=====")
-                console.log(result);
-                setClaimedReward(result);
-                // console.log(sender, reward);
-            });
         } else {
-            if (geyser) {
-                geyser.removeEventListener("TokensClaimed");
-            }
             setGeyser(null);
             setPending(false);
             setAllowance(0);
@@ -680,7 +669,7 @@ function ContentComponent() {
                                     </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" inputProps={{ min: "0", step: "0.0001" }} placeholder={enterAmountPlaceholder} disabled={!account}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" inputProps={{ min: "0", max: depositedBalance, step: "0.0001" }} placeholder={enterAmountPlaceholder} disabled={!account}
                                                     value={withdrawString}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
@@ -723,11 +712,15 @@ function ContentComponent() {
                                         </Button>
                                     }
                                     {
-                                        account && claimedReward !== null && <>
+                                        account && rewardsToBeClaimed !== null && <>
                                         <br/>
-                                            <Typography variant={"h5"} className={classes.walletHeader}>Rewards
-                                                Claimed</Typography>
-                                            <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(claimedReward, 2)}&nbsp;
+                                            <Typography variant={"h5"} className={classes.walletHeader}>
+                                            
+                                            <FormattedMessage id="content.rewards_claimed"
+                                              defaultMessage="Estimated Rewards To Be Claimed"
+                                              description="rewards claimed label"/>
+                                            </Typography>
+                                            <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(rewardsToBeClaimed, 2)}&nbsp;
                                             {tokenInfo.reward.name}</Typography>
                                         </>
                                     }

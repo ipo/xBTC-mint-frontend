@@ -13,12 +13,13 @@
   "content.estimated_rewards": "Recompensa estimada:",
   "content.wallet_balance": "Balance de tu billetera:",
   "content.deposited_balance": "Balance depositado:",
-
+  "content.rewards_claimed": "Recompensa estimada a reclamar",
   "content.type": "Métrica",
   "content.amount": "Valor",
 
   "content.stats": "Estadísticas",
   "content.approve": "Autorizar",
+
 
   "stats.total_rewards": "Recompensas totales",
   "stats.locked_rewards": "Recompensas no entregadas",

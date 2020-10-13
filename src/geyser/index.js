@@ -40,7 +40,6 @@ class Geyser {
     }
 
     toBigNum(num, decimals) {
-        console.log((new BigNumber(num).times(new BigNumber(10).pow(new BigNumber(decimals)))).toString());
         return new BigNumber(num).times(new BigNumber(10).pow(new BigNumber(decimals)));
     }
 
@@ -80,6 +79,22 @@ class Geyser {
             return {
                 status: false
             }
+        }
+    }
+
+    async rewardsToBeClaimed(withdrawingAmount) {
+        const totalDepositedAmount = await this.depositedAmount();
+        //console.log(withdrawingAmount);
+        withdrawingAmount = Math.min(totalDepositedAmount, withdrawingAmount);
+        //console.log(withdrawingAmount);
+        if (withdrawingAmount > 0 && totalDepositedAmount > 0) {
+          let response = await this.geyserContract.methods.unstakeQuery(this.toBigNum(withdrawingAmount, this.lpDecimals)).call();
+          response = this.toHuman(response, tokenInfo.reward.decimals);
+          //console.log(response);
+          return response;
+        }
+        else {
+          return 0;
         }
     }
 
