@@ -45,11 +45,12 @@ const useStyles = makeStyles((theme) => ({
     },
     depositAmount: {
         backgroundColor: "#00AEEF",
-        height: '130px',
-        width: '130px',
+        height: '200px',
+        width: '200px',
         borderRadius: '100%',
         textAlign: "center",
-        margin: 'auto'
+        margin: 'auto',
+        position: 'relative'
     },
     gearbox: {
         fontFamily: 'IBM Plex Sans',
@@ -58,7 +59,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '23px',
         textAlign: 'center',
         color: '#FFFFFF',
-        lineHeight: '130px'
+        top: '50%',
+        position: 'relative',
+        transform: 'translate(-0%,-50%)'
     },
     lowerInfo: {
         display: "flex",
