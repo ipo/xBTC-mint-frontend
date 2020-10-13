@@ -606,8 +606,8 @@ function ContentComponent() {
                                     </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
-                                    value={depositString}
+                                    <BootstrapInput type="number" id="bootstrap-input" inputProps={{ min: "0", max: availableBalance, step: "0.0001" }}  placeholder={enterAmountPlaceholder} disabled={!account}
+                                    value={deposit}
                                       onChange={handleChangeDepositAmount}/>
                                     <Button
                                         variant={"contained"}
@@ -684,7 +684,7 @@ function ContentComponent() {
                                     </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" inputProps={{ min: "0", step: "0.0001" }} placeholder={enterAmountPlaceholder} disabled={!account}
                                                     value={withdrawString}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
