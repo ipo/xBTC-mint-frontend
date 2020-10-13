@@ -19,6 +19,7 @@ import { useWallet } from 'use-wallet'
 import Stats from "../Statistics/Stats";
 import tokens from "../Info/token.json"
 import Geyser, {getTotalStats} from '../geyser';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const tokenInfo = tokens.mainnet;
 
@@ -304,32 +305,6 @@ const BootstrapInput = withStyles((theme) => ({
     },
 }))(InputBase);
 
-const statsLabels = [{
-    id: "all_time_total_rewards_token",
-    name: "Total Rewards",
-    unit: "xBTC"
-}, {
-    id: "current_locked_rewards_token",
-    name: "Locked Rewards",
-    unit: "xBTC"
-}, {
-    id: "program_duration_days",
-    name: "Maximum bonuse at",
-    unit: "days"
-}, {
-    id: "current_total_staked",
-    name: "Total Deposits",
-    unit: "USD"
-}, {
-    id: "current_unlocked_rewards_token",
-    name: "Unlocked Rewards",
-    unit: "xBTC"
-}, {
-    id: "current_reward_rate_daily",
-    name: "Reward unlock rate",
-    unit: "xBTC / month"
-}];
-
 const TxType = {
     None: 0,
     Approve: 1, 
@@ -338,6 +313,35 @@ const TxType = {
 }
 
 function ContentComponent() {
+
+    const intl = useIntl();
+
+    const statsLabels = [{
+        id: "all_time_total_rewards_token",
+        name: intl.formatMessage({id: 'stats.total_rewards', defaultMessage: "Total Rewards"}),
+        unit: "xBTC"
+    }, {
+        id: "current_locked_rewards_token",
+        name: intl.formatMessage({id: 'stats.locked_rewards', defaultMessage: "Locked Rewards"}),
+        unit: "xBTC"
+    }, {
+        id: "program_duration_days",
+        name: intl.formatMessage({id: 'stats.maximum_bonus', defaultMessage: "Maximum bonus at"}),
+        unit: intl.formatMessage({id: 'stats.days', defaultMessage: "days"})
+    }, {
+        id: "current_total_staked",
+        name: intl.formatMessage({id: 'stats.total_deposits', defaultMessage: "Total Deposits"}),
+        unit: "USD"
+    }, {
+        id: "current_unlocked_rewards_token",
+        name: intl.formatMessage({id: 'stats.unlocked_rewards', defaultMessage: "Unlocked Rewards"}),
+        unit: "xBTC"
+    }, {
+        id: "current_reward_rate_daily",
+        name: intl.formatMessage({id: 'stats.reward_unlock_rate', defaultMessage: "Reward unlock rate"}),
+        unit: `xBTC / ${intl.formatMessage({id: 'stats.month', defaultMessage: "month"})}`
+    }];
+
     const classes = useStyles();
     const { account, ethereum, connect } = useWallet()
 
@@ -564,6 +568,11 @@ function ContentComponent() {
         updateTotalStats();
     }, [])
 
+    
+    const enterAmountPlaceholder = intl.formatMessage({id: 'content.enterAmount', defaultMessage: "Enter Amount"});
+    const typeString = intl.formatMessage({id: 'content.type', defaultMessage: "Type"});
+    const amountString = intl.formatMessage({id: 'content.amount', defaultMessage: "Amount"});
+
     return (
         <Container maxWidth="lg" component="main">
             {pending && <CircularProgress className={classes.loading}/>}
@@ -574,11 +583,14 @@ function ContentComponent() {
                         <CardContent>
                             <Grid container spacing={2} alignItems="center" justify={"center"}>
                                 <Grid item md={6} sm={12} xs={12}>
-                                    <Typography variant={"h5"} className={classes.walletHeader}>Wallet
-                                        balance:</Typography>
+                                    <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.wallet_balance"
+                                          defaultMessage="Wallet balance:"
+                                          description="wallet balance label"/>
+                                    </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"} min="0" disabled={!account}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
                                     value={deposit ? deposit.toString() : ""}
                                                     onChange={handleChangeDepositAmount}/>
                                     <Button
@@ -587,10 +599,15 @@ function ContentComponent() {
                                         onClick={() => setMaxDeposit()}
                                         disabled={!account}
                                     >
-                                        Max
+                                    <FormattedMessage id="content.max"
+                                        defaultMessage="Max"
+                                        description="max button"/>
                                     </Button>
-                                    <Typography variant={"h5"} className={classes.walletHeader}>Your Estimated
-                                        Rewards:</Typography>
+                                    <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.estimated_rewards"
+                                            defaultMessage="Your Estimated Rewards:"
+                                            description="estimated rewards label"/>
+                                    </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(estimateMonthlyReward(), 2)} {tokenInfo.reward.name} /
                                         month</Typography>
                                 </Grid>
@@ -607,14 +624,22 @@ function ContentComponent() {
                                         variant={"contained"}
                                         className={classes.depositButton}
                                         onClick={() => connect('injected')}
-                                    >Connect</Button>
+                                    >
+                                        <FormattedMessage id="content.connect"
+                                            defaultMessage="Connect"
+                                            description="connect button"/>
+                                    </Button>
                                 }
                                 {
                                     account && requireApprove() && <Button
                                         variant={"contained"}
                                         className={classes.depositButton}
                                         onClick={() => approveToken()}
-                                    >Approve</Button>
+                                    >
+                                    <FormattedMessage id="content.approve"
+                                        defaultMessage="Approve"
+                                        description="approve button"/>
+                                    </Button>
                                 }
                                 {
                                     account && !requireApprove() && 
@@ -622,7 +647,11 @@ function ContentComponent() {
                                         variant={"contained"} 
                                         className={classes.depositButton}
                                         onClick={() => stake()}
-                                    >Deposit</Button>
+                                    >
+                                    <FormattedMessage id="content.deposit"
+                                        defaultMessage="Deposit"
+                                        description="deposit button"/>
+                                    </Button>
                                 }
                                 </Grid>
                             </Grid>
@@ -632,11 +661,14 @@ function ContentComponent() {
                         <CardContent>
                             <Grid container spacing={2} alignItems="center" justify={"center"}>
                                 <Grid item md={8} sm={12} xs={12}>
-                                    <Typography variant={"h5"} className={classes.walletHeader}>Deposited
-                                        balance:</Typography>
+                                    <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.deposited_balance"
+                                          defaultMessage="Deposited balance:"
+                                          description="deposited balance label"/>
+                                    </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={"Enter Amount"} min="0" disabled={!account}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
                                                     value={withdraw ? withdraw.toString() : ""}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
@@ -645,7 +677,9 @@ function ContentComponent() {
                                         disabled={!account}
                                         onClick={() => setMaxWithdraw()}
                                     >
-                                        Max
+                                    <FormattedMessage id="content.max"
+                                        defaultMessage="Max"
+                                        description="max button"/>
                                     </Button>
 
                                     {/* <Typography variant={"h5"} className={classes.walletHeader}>Amount to
@@ -666,7 +700,11 @@ function ContentComponent() {
                                             variant={"contained"}
                                             className={classes.withdrawButton}
                                             onClick={() => connect('injected')}
-                                        >Connect</Button>
+                                        >
+                                            <FormattedMessage id="content.connect"
+                                                defaultMessage="Connect"
+                                                description="connect button"/>
+                                        </Button>
                                     }
                                     {
                                         account && claimedReward !== null && <>
@@ -690,9 +728,9 @@ function ContentComponent() {
                         <Divider classes={{root: classes.divider}}/>
                         <List className={classes.listItems}>
                             <ListItem classes={{root: classes.listItemRoot}}>
-                                <ListItemText primary={"Type"} classes={{primary: classes.listHead}}/>
+                                <ListItemText primary={typeString} classes={{primary: classes.listHead}}/>
                                 <ListItemSecondaryAction>
-                                    <ListItemText primary={"Amount"} classes={{primary: classes.listHead}}/>
+                                    <ListItemText primary={amountString} classes={{primary: classes.listHead}}/>
                                 </ListItemSecondaryAction>
                             </ListItem>
                             {items.map((value, index) => {

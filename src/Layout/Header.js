@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../App.css'
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -10,6 +10,7 @@ import ProfileIcon from "../images/address 1.png";
 import {ExitToApp} from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
 import { useWallet } from 'use-wallet'
+import { FormattedMessage } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -114,7 +115,11 @@ function Header() {
                 <Toolbar className={classes.toolbar}>
                     <div className={classes.toolbarTitle}>
                         <div className={classes.headerTitle}>
-                            <Typography variant={"body1"} className={classes.welcome}> Welcome</Typography>
+                            <Typography variant={"body1"} className={classes.welcome}>
+                            <FormattedMessage id="header.welcome"
+                      defaultMessage="Welcome"
+                      description="Welcome on header"/>
+                       </Typography>
                             {
                                 account && <>
                                     <img src={ProfileIcon} alt={"Coinbase Wallet"} className={classes.icon}/>
@@ -126,7 +131,12 @@ function Header() {
                     <div className={classes.toolbarTitle}>
                         <div className={classes.headerTitle}>
                             <img src={LogoIcon} alt={"Coinbase Wallet"} className={classes.logoIcon}/>
-                            <Typography className={classes.headlineIcon}> The MINT</Typography>
+                            <Typography className={classes.headlineIcon}>
+                             
+                             <FormattedMessage id="header.title"
+                              defaultMessage="The MINT"
+                              description="title on header"/>
+                             </Typography>
                         </div>
                     </div>
 
@@ -137,7 +147,14 @@ function Header() {
                         endIcon={<ExitToApp/>}
                         onClick={() => connectOrDisconnect()}
                     >
-                        {account === null ? "Connect" : "Disconnect"}
+                        {account === null ? 
+                        <FormattedMessage id="header.connect"
+                      defaultMessage="Connect"
+                      description="connect on header"/>
+                       :
+                       <FormattedMessage id="header.disconnect"
+                      defaultMessage="Disconnect"
+                      description="disconnect on header"/>}
                     </Button>
 
                 </Toolbar>

@@ -3,9 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { IntlProvider } from "react-intl";
+
+import messages_es from "./translations/es.json";
+
+const messages = {
+  'es': messages_es
+};
+const language = navigator.language.split(/[-_]/)[0];  // language without region code
+
 ReactDOM.render(
     <React.StrictMode>
-            <App/>
+      <IntlProvider locale={language} messages={messages[language]}>
+        <App/>
+      </IntlProvider>,
     </React.StrictMode>,
     document.getElementById('root')
 );
