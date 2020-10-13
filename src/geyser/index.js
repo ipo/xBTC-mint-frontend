@@ -88,7 +88,7 @@ class Geyser {
         withdrawingAmount = Math.min(totalDepositedAmount, withdrawingAmount);
         //console.log(withdrawingAmount);
         if (withdrawingAmount > 0 && totalDepositedAmount > 0) {
-          let response = await this.geyserContract.methods.unstakeQuery(this.toBigNum(withdrawingAmount, this.lpDecimals)).call();
+          let response = await this.geyserContract.methods.unstakeQuery(this.toBigNum(withdrawingAmount, this.lpDecimals)).call({ from: this.account});
           response = this.toHuman(response, tokenInfo.reward.decimals);
           //console.log(response);
           return response;
