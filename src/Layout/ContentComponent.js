@@ -363,21 +363,28 @@ function ContentComponent() {
     const [deposit, setDeposit] = useState(0)
     const [withdraw, setWithdraw] = useState(0)
 
-    const handleChangeDepositAmount = (event) => {
-        const num = Number(event.target.value);
-        if (num >= 0) {
-            setDeposit(num);
-        } else {
-            setDeposit(-num);
+    const [depositString, setDepositString] = useState("")
+    const [withdrawString, setWithdrawString] = useState("")
+
+    const handleChangeDepositAmount = (event) => {  
+        let stringValue = event.target.value;
+        let numberValue = Number(event.target.value);
+        if (numberValue < 0) {
+            stringValue = "0";
+            numberValue = 0;
         }
+        setDepositString(stringValue);
+        setDeposit(numberValue);
     }
     const handleChangeWithdrawAmount = (event) => {
-        const num = Number(event.target.value);
-        if (num >= 0) {
-            setWithdraw(num);
-        } else {
-            setWithdraw(-num);
+        let stringValue = event.target.value;
+        let numberValue = Number(event.target.value);
+        if (numberValue < 0) {
+            stringValue = "0";
+            numberValue = 0;
         }
+        setWithdrawString(stringValue);
+        setWithdraw(numberValue);
     }
 
     const depositPercent = () => {
@@ -449,10 +456,12 @@ function ContentComponent() {
     
     const setMaxWithdraw = () => {
         setWithdraw(depositedBalance);
+        setWithdrawString(depositedBalance.toString());
     }
 
     const setMaxDeposit = () => {
         setDeposit(availableBalance);
+        setDepositString(availableBalance.toString());
     }
 
     const checkTxStatus = async () => {
@@ -528,6 +537,12 @@ function ContentComponent() {
     }
 
     useEffect(() => {
+      if (!account) {
+        connect();
+      }
+    }, [account])
+    
+    useEffect(() => {
         if (pendingTx !== null) {
             const interval = setInterval(() => {
                 checkTxStatus();
@@ -572,6 +587,7 @@ function ContentComponent() {
     const enterAmountPlaceholder = intl.formatMessage({id: 'content.enterAmount', defaultMessage: "Enter Amount"});
     const typeString = intl.formatMessage({id: 'content.type', defaultMessage: "Type"});
     const amountString = intl.formatMessage({id: 'content.amount', defaultMessage: "Amount"});
+    const statsTitleString = intl.formatMessage({id: 'content.stats', defaultMessage: "Stats"});
 
     return (
         <Container maxWidth="lg" component="main">
@@ -590,9 +606,9 @@ function ContentComponent() {
                                     </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(availableBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
-                                    value={deposit ? deposit.toString() : ""}
-                                                    onChange={handleChangeDepositAmount}/>
+                                    <BootstrapInput type="number" id="bootstrap-input" inputProps={{ min: "0", max: availableBalance, step: "0.0001" }}  placeholder={enterAmountPlaceholder} disabled={!account}
+                                    value={deposit}
+                                      onChange={handleChangeDepositAmount}/>
                                     <Button
                                         variant={"contained"}
                                         className={classes.depositButtonMax}
@@ -668,8 +684,8 @@ function ContentComponent() {
                                     </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
                                         ({tokenInfo.staking.name})</Typography>
-                                    <BootstrapInput type={"number"} id="bootstrap-input" placeholder={enterAmountPlaceholder} min="0" disabled={!account}
-                                                    value={withdraw ? withdraw.toString() : ""}
+                                    <BootstrapInput type={"number"} id="bootstrap-input" inputProps={{ min: "0", step: "0.0001" }} placeholder={enterAmountPlaceholder} disabled={!account}
+                                                    value={withdrawString}
                                                     onChange={handleChangeWithdrawAmount}/>
                                     <Button
                                         variant={"contained"}
@@ -693,7 +709,11 @@ function ContentComponent() {
                                             variant={"contained"}
                                             className={classes.withdrawButton}
                                             onClick={() => unstake()}
-                                        >Withdraw</Button>
+                                        >
+                                        <FormattedMessage id="content.withdraw"
+                                            defaultMessage="Withdraw"
+                                            description="withdraw button"/>
+                                        </Button>
                                     }
                                     {
                                         !account && <Button
@@ -723,7 +743,7 @@ function ContentComponent() {
                 </Grid>
                 <Grid item md={4} sm={12} xs={12}>
                     <Card className={classes.card}>
-                        <CardHeader title={"Stats"} classes={{root: classes.cardHeaderRoot, title: classes.header}}>
+                        <CardHeader title={statsTitleString} classes={{root: classes.cardHeaderRoot, title: classes.header}}>
                         </CardHeader>
                         <Divider classes={{root: classes.divider}}/>
                         <List className={classes.listItems}>
