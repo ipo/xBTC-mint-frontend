@@ -1,0 +1,32 @@
+{
+  "header.welcome": "Welcome",
+  "header.title": "The MINT",
+  "header.connect": "Connect",
+  "header.disconnect": "Disconnect",
+
+  "content.enterAmount": "Enter Amount",
+  "content.max": "Max",
+  "content.connect": "Connect",
+  "content.disconnect": "Disconnect",
+  "content.deposit": "Deposit",
+  "content.withdraw": "Withdraw",
+  "content.estimated_rewards": "Your Estimated Rewards:",
+  "content.wallet_balance": "Wallet balance:",
+  "content.deposited_balance": "Deposited balance:",
+
+  "content.type": "Type",
+  "content.amount": "Amount",
+  "content.apy": "APY",
+  "content.stats": "Stats",
+  "content.approve": "Approve",
+
+  "stats.total_rewards": "Total Rewards",
+  "stats.locked_rewards": "Locked Rewards",
+  "stats.maximum_bonus": "Maximum bonus at",
+  "stats.total_deposits": "Total Deposits",
+  "stats.unlocked_rewards": "Unlocked Rewards",
+  "stats.reward_unlock_rate": "Reward unlock rate",
+  "stats.days": "days",
+  "stats.month": "month",
+  "stats.apy": "APY"
+}

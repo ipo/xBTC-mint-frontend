@@ -16,7 +16,7 @@
 
   "content.type": "Métrica",
   "content.amount": "Valor",
-  "content.apy": "TRA",
+
   "content.stats": "Estadísticas",
   "content.approve": "Autorizar",
 
@@ -27,5 +27,6 @@
   "stats.unlocked_rewards": "Recompensas destrabadas",
   "stats.reward_unlock_rate": "Razón de recompensas",
   "stats.days": "días",
-  "stats.month": "mes"
+  "stats.month": "mes",
+  "stats.apy": "TRA"
 }
