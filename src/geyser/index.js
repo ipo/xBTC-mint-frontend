@@ -123,7 +123,6 @@ class Geyser {
     }
 
     removeEventListenr(event) {
-        this.geyserContract.removeEventListenr(event);
     }
 
     get lpDecimals() {
