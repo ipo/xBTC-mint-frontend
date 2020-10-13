@@ -2,7 +2,7 @@
   "header.welcome": "Bienvenido",
   "header.title": "The MINT",
   "header.connect": "Conectar",
-  "header.disconnect": "Disconnect",
+  "header.disconnect": "Desconectar",
   "header.title": "The MINT",
 
   "content.enterAmount": "Introduce un monto",
