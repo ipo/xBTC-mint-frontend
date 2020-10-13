@@ -405,11 +405,8 @@ function ContentComponent() {
     }
 
     const requireApprove = () => {
-        if (deposit === null || deposit === 0) {
-            return false;
-        }
         if (account) {
-            return deposit > allowance;
+            return deposit > allowance || allowance == 0;
         }
         return false;
     }
