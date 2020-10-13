@@ -132,7 +132,7 @@ class Geyser {
 }
 
 export const getTotalStats = async() => {
-    const url = `https://data.xbtc.fi/geyser_stats/${tokenInfo.geyser}/`;
+    const url = `https://data.xbtc.fi/geyser_stats/${tokenInfo.geyser}/?${new Date().getTime()}`;
     const res = await axios.get(url);
 
     return res.data;
