@@ -2,9 +2,9 @@ import Web3 from 'web3';
 import geyserAbi from '../Info/abi/geyser.json';
 import erc20 from '../Info/abi/erc20.json';
 import tokens from "../Info/token.json";
-import BigNumber from 'bignumber.js'
 import axios from 'axios';
 
+const BigNumber = Web3.utils.BN;
 const tokenInfo = tokens.mainnet;
 
 class Geyser {
@@ -41,8 +41,8 @@ class Geyser {
     }
 
     toBigNum(num, decimals) {
-        console.log((new BigNumber(num).times(new BigNumber(10).pow(new BigNumber(decimals)))).toString());
-        return new BigNumber(num).times(new BigNumber(10).pow(new BigNumber(decimals)));
+        console.log((new BigNumber(num).mul(new BigNumber(10).pow(new BigNumber(decimals)))).toString());
+        return new BigNumber(num).mul(new BigNumber(10).pow(new BigNumber(decimals)));
     }
 
     async allowance() {
