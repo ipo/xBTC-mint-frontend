@@ -4,7 +4,6 @@ import erc20 from '../Info/abi/erc20.json';
 import tokens from "../Info/token.json";
 import BigNumber from 'bignumber.js'
 import axios from 'axios';
-import { ethers } from 'ethers'
 
 const tokenInfo = tokens.mainnet;
 
