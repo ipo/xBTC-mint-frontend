@@ -1,0 +1,31 @@
+{
+  "header.welcome": "Welkom",
+  "header.title": "De MINT",
+  "header.connect": "Verbinden",
+  "header.disconnect": "Verbinding verbreken",
+
+  "content.enterAmount": "Voer een bedrag in",
+  "content.max": "Maximaal",
+  "content.connect": "Verbinden",
+  "content.disconnect": "Verbinding verbreken",
+  "content.deposit": "Storting",
+  "content.withdraw": "Opnemen",
+  "content.estimated_rewards": "Uw geschatte beloning:",
+  "content.wallet_balance": "Portemonee balans:",
+  "content.deposited_balance": "Storting balans:",
+
+  "content.type": "Type",
+  "content.amount": "Hoeveelheid",
+  "content.stats": "Status",
+  "content.approve": "Goedkeuren",
+
+  "stats.total_rewards": "Totale Beloning",
+  "stats.locked_rewards": "Vergrendelde Beloning",
+  "stats.maximum_bonus": "Maximale bonus bij",
+  "stats.total_deposits": "Totale Stortingen",
+  "stats.unlocked_rewards": "Ontgrendelde Beloningen",
+  "stats.reward_unlock_rate": "Ontgrendelings Bonus",
+  "stats.days": "Dagen",
+  "stats.month": "Maand",
+  "stats.apy": "Rendement"
+}

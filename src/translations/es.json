@@ -3,7 +3,6 @@
   "header.title": "The MINT",
   "header.connect": "Conectar",
   "header.disconnect": "Desconectar",
-  "header.title": "The MINT",
 
   "content.enterAmount": "Introduce un monto",
   "content.max": "Máximo",
@@ -12,12 +11,12 @@
   "content.deposit": "Depositar",
   "content.withdraw": "Retirar",
   "content.estimated_rewards": "Recompensa estimada:",
-  "content.wallet_balance": "Balance de tu billetera",
+  "content.wallet_balance": "Balance de tu billetera:",
   "content.deposited_balance": "Balance depositado:",
 
   "content.type": "Métrica",
   "content.amount": "Valor",
-  "content.apy": "TRA",
+
   "content.stats": "Estadísticas",
   "content.approve": "Autorizar",
 
@@ -28,5 +27,6 @@
   "stats.unlocked_rewards": "Recompensas destrabadas",
   "stats.reward_unlock_rate": "Razón de recompensas",
   "stats.days": "días",
-  "stats.month": "mes"
+  "stats.month": "mes",
+  "stats.apy": "TRA"
 }

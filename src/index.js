@@ -5,10 +5,13 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { IntlProvider } from "react-intl";
 
-import messages_es from "./translations/es.json";
+import es from "./translations/es.json";
+import nl from "./translations/nl.json";
+//import pt from "./translations/pt.json";
 
 const messages = {
-  'es': messages_es
+  'es': es,
+  'nl': nl
 };
 const language = navigator.language.split(/[-_]/)[0];  // language without region code
 
