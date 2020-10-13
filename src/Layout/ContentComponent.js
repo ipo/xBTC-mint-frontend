@@ -528,6 +528,12 @@ function ContentComponent() {
     }
 
     useEffect(() => {
+      if (!account) {
+        connect();
+      }
+    }, [account])
+    
+    useEffect(() => {
         if (pendingTx !== null) {
             const interval = setInterval(() => {
                 checkTxStatus();
