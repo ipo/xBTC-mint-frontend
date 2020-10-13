@@ -13,7 +13,8 @@
   "content.estimated_rewards": "Your Estimated Rewards:",
   "content.wallet_balance": "Wallet balance:",
   "content.deposited_balance": "Deposited balance:",
-
+  "content.rewards_claimed": "Estimated Rewards To Be Claimed",
+  
   "content.type": "Type",
   "content.amount": "Amount",
   "content.apy": "APY",
