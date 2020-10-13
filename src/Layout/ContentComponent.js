@@ -16,7 +16,6 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import {fade, InputBase} from "@material-ui/core";
 import { useWallet } from 'use-wallet'
-import Stats from "../Statistics/Stats";
 import tokens from "../Info/token.json"
 import Geyser, {getTotalStats} from '../geyser';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -362,8 +361,6 @@ function ContentComponent() {
     const [depositedBalance, setDepositedBalance] = useState(0);
     const [geyser, setGeyser] = useState(null);
 
-    const [apy, setAPY] = useState(0);
-
     const [totalStaked, setTotalStaked] = useState(0);
     const [rewardRate30, setRewardRate30] = useState(0);
 
@@ -413,7 +410,7 @@ function ContentComponent() {
 
     const requireApprove = () => {
         if (account) {
-            return deposit > allowance || allowance == 0;
+            return deposit > allowance || allowance === 0;
         }
         return false;
     }
@@ -525,7 +522,6 @@ function ContentComponent() {
         setRewardRate30(stats.current_reward_rate_30d_token);
 
         setItems(newItems);
-        setAPY(stats.apy_estimate);
     }
 
     const updateInfo = (_geyser) => {
