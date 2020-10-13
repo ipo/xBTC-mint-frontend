@@ -223,7 +223,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '4px',
         color: '#FFFFFF',
         boxShadow: "none",
-        marginLeft: "8px",
+        float: "right",
         height: '40px',
         marginTop: '-5px',
         "&:hover": {
@@ -624,13 +624,13 @@ function ContentComponent() {
                                         month</Typography>
                                 </Grid>
 
-                                <Grid item md={4} sm={12} xs={12}>
+                                <Grid item md={3} sm={12} xs={12}>
                                     <div className={classes.depositAmount}>
                                         <Typography variant={"h4"} className={classes.gearbox}>{formatNumber(depositPercent(), 2)} %</Typography>
                                     </div>
 
                                 </Grid>
-                                <Grid item md={2} sm={12} xs={12}>
+                                <Grid item md={3} sm={12} xs={12}>
                                 {
                                     !account && <Button
                                         variant={"contained"}
