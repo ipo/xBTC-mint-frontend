@@ -337,7 +337,7 @@ function ContentComponent() {
         name: intl.formatMessage({id: 'stats.unlocked_rewards', defaultMessage: "Unlocked Rewards"}),
         unit: "xBTC"
     }, {
-        id: "current_reward_rate_daily",
+        id: "current_reward_rate_30d_usd",
         name: intl.formatMessage({id: 'stats.reward_unlock_rate', defaultMessage: "Reward unlock rate"}),
         unit: `xBTC / ${intl.formatMessage({id: 'stats.month', defaultMessage: "month"})}`
     },
