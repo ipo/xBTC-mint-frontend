@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useStatePersist } from 'use-state-persist';
 import '../App.css'
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -95,19 +96,25 @@ const useStyles = makeStyles((theme) => ({
 function Header() {
     const classes = useStyles();
     
+    /* Will try to connect on load unless true. Default is true. */
+    const [userDisconnected, setUserDisconnected] = useStatePersist(true);
     const { account, connect, reset } = useWallet()
-
-    // useEffect(() => {
-    //     console.log(account);
-    // }, [account])
 
     const connectOrDisconnect = () => {
         if (account) {
+            setUserDisconnected(true);
             reset();
         } else {
+            setUserDisconnected(false);
             connect('injected')
         }
     }
+
+    useEffect(() => {
+        if (!account && !userDisconnected) {
+            connect();
+        }
+    }, [account, userDisconnected])
 
     return (
         <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
