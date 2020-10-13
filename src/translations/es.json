@@ -18,6 +18,7 @@
   "content.type": "Métrica",
   "content.amount": "Valor",
   "content.apy": "TRA",
+  "content.stats": "Estadísticas",
 
   "stats.total_rewards": "Recompensas totales",
   "stats.locked_rewards": "Recompensas no entregadas",

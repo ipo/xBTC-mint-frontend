@@ -572,6 +572,7 @@ function ContentComponent() {
     const enterAmountPlaceholder = intl.formatMessage({id: 'content.enterAmount', defaultMessage: "Enter Amount"});
     const typeString = intl.formatMessage({id: 'content.type', defaultMessage: "Type"});
     const amountString = intl.formatMessage({id: 'content.amount', defaultMessage: "Amount"});
+    const statsTitleString = intl.formatMessage({id: 'content.stats', defaultMessage: "Stats"});
 
     return (
         <Container maxWidth="lg" component="main">
@@ -727,7 +728,7 @@ function ContentComponent() {
                 </Grid>
                 <Grid item md={4} sm={12} xs={12}>
                     <Card className={classes.card}>
-                        <CardHeader title={"Stats"} classes={{root: classes.cardHeaderRoot, title: classes.header}}>
+                        <CardHeader title={statsTitleString} classes={{root: classes.cardHeaderRoot, title: classes.header}}>
                         </CardHeader>
                         <Divider classes={{root: classes.divider}}/>
                         <List className={classes.listItems}>
