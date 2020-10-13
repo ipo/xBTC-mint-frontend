@@ -132,8 +132,9 @@ class Geyser {
 }
 
 export const getTotalStats = async() => {
-    const basicUrl = "https://data.xbtc.fi/geyser_stats/";
-    const res = await axios.get(basicUrl + tokenInfo.geyser);
+    const url = `https://data.xbtc.fi/geyser_stats/${tokenInfo.geyser}/`;
+    const res = await axios.get(url);
+
     return res.data;
 }
 
