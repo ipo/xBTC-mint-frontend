@@ -702,16 +702,12 @@ function ContentComponent() {
                                     {
                                       accumulatedRewards !== null && depositedBalance > 0 &&
                                       <React.Fragment>
-                                      <Typography variant={"h5"} className={classes.walletHeader}>
-                                      <FormattedMessage id="content.accumulated_rewards"
-                                          defaultMessage="Accumulated Rewards:"
-                                          description="accumulated rewards label"/>
-                                      </Typography>
-                                      <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(accumulatedRewards, 2)} {tokenInfo.reward.name} / 
-                                          <FormattedMessage id="stats.month"
-                                              defaultMessage="month"
-                                              description="month"/>
-                                        </Typography>
+                                          <Typography variant={"h5"} className={classes.walletHeader}>
+                                              <FormattedMessage id="content.accumulated_rewards"
+                                                  defaultMessage="Accumulated Rewards:"
+                                                  description="accumulated rewards label"/>
+                                          </Typography>
+                                          <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(accumulatedRewards, 2)} {tokenInfo.reward.name}</Typography>
                                       </React.Fragment>
                                     }  
                                 </Grid>
