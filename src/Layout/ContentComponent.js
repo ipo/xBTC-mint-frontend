@@ -357,6 +357,7 @@ function ContentComponent() {
     const [pendingTx, setPendingTx] = useState(null);
 
     const [rewardsToBeClaimed, setRewardsToBeClaimed] = useState(null);
+    const [accumulatedRewards, setAccumulatedRewards] = useState(null);
 
     const [depositedBalance, setDepositedBalance] = useState(0);
     const [geyser, setGeyser] = useState(null);
@@ -535,6 +536,15 @@ function ContentComponent() {
         });
         _geyser.depositedAmount().then(_depositedAmount => {
             setDepositedBalance(_depositedAmount);
+            if (_depositedAmount > 0) {
+              return _geyser.rewardsToBeClaimed(_depositedAmount);
+            }
+            else {
+              return _geyser.rewardsToBeClaimed(0);
+            }
+        }).then((accumulatedRewards) => {
+            console.log(accumulatedRewards);
+            setAccumulatedRewards(accumulatedRewards); 
         });
 
         updateTotalStats();
@@ -609,8 +619,11 @@ function ContentComponent() {
                                             defaultMessage="Your Estimated Rewards:"
                                             description="estimated rewards label"/>
                                     </Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(estimateMonthlyReward(), 2)} {tokenInfo.reward.name} /
-                                        month</Typography>
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(estimateMonthlyReward(), 2)} {tokenInfo.reward.name} / 
+                                    <FormattedMessage id="stats.month"
+                                        defaultMessage="month"
+                                        description="month"/>
+                                        </Typography>
                                 </Grid>
 
                                 <Grid item md={3} sm={12} xs={12}>
@@ -668,7 +681,10 @@ function ContentComponent() {
                                           description="deposited balance label"/>
                                     </Typography>
                                     <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
-                                        ({tokenInfo.staking.name})</Typography>
+                                        ({tokenInfo.staking.name})
+                                    </Typography>
+
+
                                     <BootstrapInput type={"number"} id="bootstrap-input" inputProps={{ min: "0", max: depositedBalance, step: "0.0001" }} placeholder={enterAmountPlaceholder} disabled={!account}
                                                     value={withdrawString}
                                                     onChange={handleChangeWithdrawAmount}/>
@@ -683,10 +699,21 @@ function ContentComponent() {
                                         description="max button"/>
                                     </Button>
 
-                                    {/* <Typography variant={"h5"} className={classes.walletHeader}>Amount to
-                                        Withdraw</Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>222330.00 {tokenInfo.reward.name} /
-                                        month</Typography> */}
+                                    {
+                                      accumulatedRewards !== null && depositedBalance > 0 &&
+                                      <React.Fragment>
+                                      <Typography variant={"h5"} className={classes.walletHeader}>
+                                      <FormattedMessage id="content.accumulated_rewards"
+                                          defaultMessage="Accumulated Rewards:"
+                                          description="accumulated rewards label"/>
+                                      </Typography>
+                                      <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(accumulatedRewards, 2)} {tokenInfo.reward.name} / 
+                                          <FormattedMessage id="stats.month"
+                                              defaultMessage="month"
+                                              description="month"/>
+                                        </Typography>
+                                      </React.Fragment>
+                                    }  
                                 </Grid>
                                 <Grid container item md={4} sm={12} xs={12} justify="flex-end">
                                     {
