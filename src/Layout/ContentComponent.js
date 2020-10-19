@@ -18,6 +18,7 @@ import {fade, InputBase} from "@material-ui/core";
 import { useWallet } from 'use-wallet'
 import tokens from "../Info/token.json"
 import Geyser, {getTotalStats} from '../geyser';
+import UniswapPool from '../uniswap-pool';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 const tokenInfo = tokens.mainnet;
@@ -352,15 +353,17 @@ function ContentComponent() {
     const [availableBalance, setAvailableBalance] = useState(0);
     const [allowance, setAllowance] = useState(0);
     const [pending, setPending] = useState(false);
-    const [pendingTxType, setPendingTxType] = useState(TxType.None);
+    const [, setPendingTxType] = useState(TxType.None);
     const [checkTxTimer, setCheckTxTimer] = useState(null);
     const [pendingTx, setPendingTx] = useState(null);
 
     const [rewardsToBeClaimed, setRewardsToBeClaimed] = useState(null);
+    const [depositedLiquidityEquivalent, setDepositedLiquidityEquivalent] = useState(null);
     const [accumulatedRewards, setAccumulatedRewards] = useState(null);
 
     const [depositedBalance, setDepositedBalance] = useState(0);
     const [geyser, setGeyser] = useState(null);
+    const [, setUniswapPool] = useState(null);
 
     const [totalStaked, setTotalStaked] = useState(0);
     const [rewardRate30, setRewardRate30] = useState(0);
@@ -368,7 +371,7 @@ function ContentComponent() {
     const [deposit, setDeposit] = useState(0)
     const [withdraw, setWithdraw] = useState(0)
 
-    const [depositString, setDepositString] = useState("")
+    const [, setDepositString] = useState("")
     const [withdrawString, setWithdrawString] = useState("")
 
     const handleChangeDepositAmount = (event) => {  
@@ -527,23 +530,27 @@ function ContentComponent() {
         setItems(newItems);
     }
 
-    const updateInfo = (_geyser) => {
+    const updateInfo = (_geyser, _uniswapPool) => {
         _geyser.availableHumanBalance().then(_balance => {
             setAvailableBalance(_balance);
         });
         _geyser.allowance().then(_allowance => {
             setAllowance(_allowance);
         });
-        _geyser.depositedAmount().then(_depositedAmount => {
+        _geyser.depositedAmount().then(async (_depositedAmount) =>  {
             setDepositedBalance(_depositedAmount);
+            const equivalence = await _uniswapPool.computeUNIV2Equivalence(_depositedAmount);
+            setDepositedLiquidityEquivalent(equivalence);
+
             if (_depositedAmount > 0) {
               return _geyser.rewardsToBeClaimed(_depositedAmount);
             }
             else {
               return _geyser.rewardsToBeClaimed(0);
             }
+
+
         }).then((accumulatedRewards) => {
-            console.log(accumulatedRewards);
             setAccumulatedRewards(accumulatedRewards); 
         });
 
@@ -562,8 +569,10 @@ function ContentComponent() {
     useEffect(() => {
         if (account) {
             const geyser = new Geyser(account, ethereum);
+            const uniswapPool = new UniswapPool(account, ethereum);
             setGeyser(geyser);
-            updateInfo(geyser);
+            setUniswapPool(uniswapPool);
+            updateInfo(geyser, uniswapPool);
 
         } else {
             setGeyser(null);
@@ -680,10 +689,13 @@ function ContentComponent() {
                                           defaultMessage="Deposited balance:"
                                           description="deposited balance label"/>
                                     </Typography>
-                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{depositedBalance}&nbsp;
+
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>{formatNumber(depositedBalance, 18)}&nbsp;
                                         ({tokenInfo.staking.name})
                                     </Typography>
-
+                                    { depositedLiquidityEquivalent &&
+                                    <Typography variant={"h6"} className={classes.walletHeaderThin}>({formatNumber(depositedLiquidityEquivalent[0], 4)} ETH / {formatNumber(depositedLiquidityEquivalent[1], 2)} xBTC)</Typography>
+                                    }
 
                                     <BootstrapInput type={"number"} id="bootstrap-input" inputProps={{ min: "0", max: depositedBalance, step: "0.0001" }} placeholder={enterAmountPlaceholder} disabled={!account}
                                                     value={withdrawString}
