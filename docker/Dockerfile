@@ -54,6 +54,8 @@ RUN yarn
 # copy and build the code
 ADD src/ /app/src/
 ADD public/ /app/public/
+ADD config/ /app/config/
+ADD scripts/ /app/scripts/
 RUN yarn build
 #
 #CMD yarn start
